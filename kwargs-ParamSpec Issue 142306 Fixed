@@ -1,0 +1,27 @@
+# Original Specs Code
+from typing import Any, Callable, TypeVar
+
+_F = TypeVar("_F", bound=Callable[..., Any])
+
+def my_decorator(func: _F) -> _F:
+    def wrapper(*args: Any, **kwargs: Any) -> Any:
+        print("Before the function call")
+        result = func(*args, **kwargs)
+        print("After the function call")
+        return result
+    return wrapper  # Type ignored due to mismatch
+
+# Updated Specs Code
+from typing import Callable, TypeVar
+from typing_extensions import ParamSpec
+
+P = ParamSpec("P")  # Captures the parameter specification
+R = TypeVar("R")    # Captures the return type
+
+def my_decorator(func: Callable[P, R]) -> Callable[P, R]:
+    def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
+        print("Before the function call")
+        result = func(*args, **kwargs)
+        print("After the function call")
+        return result
+    return wrapper
